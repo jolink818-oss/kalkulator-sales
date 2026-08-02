@@ -1,10 +1,8 @@
 {
-  "name": "Kalkulator Sales Sekolah",
-  "short_name": "AMSBEventCalculator",
+  "name": "Kalkulator Pro Saya",
+  "short_name": "AMCalcu",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#128C7E",
   "icons": [
     {
       "src": "icon.png",
