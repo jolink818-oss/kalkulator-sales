@@ -104,7 +104,7 @@
             color: var(--subtext-color);
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="date"] {
             width: 100%;
             padding: 10px;
             margin-top: 4px;
@@ -114,6 +114,15 @@
             font-size: 0.95rem;
             background-color: var(--input-bg);
             color: var(--text-color);
+        }
+
+        /* Supaya ikon kalendar nampak jelas dalam mod gelap/cerah */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(0.5);
+        }
+        body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
         }
 
         .denomination-row {
@@ -223,13 +232,13 @@
     <h2>Maklumat Jualan</h2>
     
     <label>Nama Sekolah / Catatan Header</label>
-    <input type="text" id="school" value="SK AU KERAMAT (2,140) DAY 2">
+    <input type="text" id="school" placeholder="cth: SK Seri Perdana (1,500) Day 1" oninput="saveData()">
     
-    <label>Tarikh & Hari</label>
-    <input type="text" id="dateStr" value="30/07/2026 - KHAMIS">
+    <label>Tarikh</label>
+    <input type="date" id="datePicker" onchange="saveData()">
 
     <label>Sales Executives</label>
-    <input type="text" id="executives" value="Shakhir, Azwa & Syu Intern">
+    <input type="text" id="executives" placeholder="cth: Shakhir, Azwa & Syu" oninput="saveData()">
 </div>
 
 <div class="card">
@@ -237,47 +246,47 @@
     
     <div class="denomination-row">
         <label>RM 1</label>
-        <input type="number" id="pcs1" value="1027" oninput="calculate()">
-        <span class="subtotal" id="sub1">RM 1,027</span>
+        <input type="number" id="pcs1" placeholder="0" oninput="calculate(); saveData();">
+        <span class="subtotal" id="sub1">RM 0</span>
     </div>
     <div class="denomination-row">
         <label>RM 5</label>
-        <input type="number" id="pcs5" value="123" oninput="calculate()">
-        <span class="subtotal" id="sub5">RM 615</span>
+        <input type="number" id="pcs5" placeholder="0" oninput="calculate(); saveData();">
+        <span class="subtotal" id="sub5">RM 0</span>
     </div>
     <div class="denomination-row">
         <label>RM 10</label>
-        <input type="number" id="pcs10" value="162" oninput="calculate()">
-        <span class="subtotal" id="sub10">RM 1,620</span>
+        <input type="number" id="pcs10" placeholder="0" oninput="calculate(); saveData();">
+        <span class="subtotal" id="sub10">RM 0</span>
     </div>
     <div class="denomination-row">
         <label>RM 20</label>
-        <input type="number" id="pcs20" value="25" oninput="calculate()">
-        <span class="subtotal" id="sub20">RM 500</span>
+        <input type="number" id="pcs20" placeholder="0" oninput="calculate(); saveData();">
+        <span class="subtotal" id="sub20">RM 0</span>
     </div>
     <div class="denomination-row">
         <label>RM 50</label>
-        <input type="number" id="pcs50" value="3" oninput="calculate()">
-        <span class="subtotal" id="sub50">RM 150</span>
+        <input type="number" id="pcs50" placeholder="0" oninput="calculate(); saveData();">
+        <span class="subtotal" id="sub50">RM 0</span>
     </div>
     <div class="denomination-row">
         <label>RM 100</label>
-        <input type="number" id="pcs100" value="" oninput="calculate()">
+        <input type="number" id="pcs100" placeholder="0" oninput="calculate(); saveData();">
         <span class="subtotal" id="sub100">RM 0</span>
     </div>
 
     <label>Syiling / Cents (RM)</label>
-    <input type="number" id="centsVal" value="12.00" step="0.01" oninput="calculate()">
+    <input type="number" id="centsVal" placeholder="0.00" step="0.01" oninput="calculate(); saveData();">
 
     <label>Jualan QR (RM)</label>
-    <input type="number" id="qrVal" value="84.00" step="0.01" oninput="calculate()">
+    <input type="number" id="qrVal" placeholder="0.00" step="0.01" oninput="calculate(); saveData();">
 
     <div class="total-box">
-        <div><span>Jumlah Cash (Kertas):</span> <span id="txtPaperCash">RM 3,912.00</span></div>
-        <div><span>Cents:</span> <span id="txtCents">RM 12.00</span></div>
-        <div><span>Jumlah Cash Keseluruhan:</span> <span id="txtTotalCash">RM 3,924.00</span></div>
-        <div><span>Jumlah QR:</span> <span id="txtQR">RM 84.00</span></div>
-        <div class="grand-total"><span>TOTAL KESELURUHAN:</span> <span id="txtGrand">RM 4,008.00</span></div>
+        <div><span>Jumlah Cash (Kertas):</span> <span id="txtPaperCash">RM 0.00</span></div>
+        <div><span>Cents:</span> <span id="txtCents">RM 0.00</span></div>
+        <div><span>Jumlah Cash Keseluruhan:</span> <span id="txtTotalCash">RM 0.00</span></div>
+        <div><span>Jumlah QR:</span> <span id="txtQR">RM 0.00</span></div>
+        <div class="grand-total"><span>TOTAL KESELURUHAN:</span> <span id="txtGrand">RM 0.00</span></div>
     </div>
 
     <div class="btn-group">
@@ -310,6 +319,50 @@
             document.getElementById('themeBtn').innerText = '☀️ Light Mode';
         }
     })();
+
+    // Auto-Save Data to LocalStorage
+    function saveData() {
+        const data = {
+            school: document.getElementById('school').value,
+            datePicker: document.getElementById('datePicker').value,
+            executives: document.getElementById('executives').value,
+            pcs1: document.getElementById('pcs1').value,
+            pcs5: document.getElementById('pcs5').value,
+            pcs10: document.getElementById('pcs10').value,
+            pcs20: document.getElementById('pcs20').value,
+            pcs50: document.getElementById('pcs50').value,
+            pcs100: document.getElementById('pcs100').value,
+            centsVal: document.getElementById('centsVal').value,
+            qrVal: document.getElementById('qrVal').value
+        };
+        localStorage.setItem('salesCalcSavedData', JSON.stringify(data));
+    }
+
+    // Load Saved Data on Startup
+    function loadSavedData() {
+        const saved = localStorage.getItem('salesCalcSavedData');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                document.getElementById('school').value = data.school || '';
+                document.getElementById('datePicker').value = data.datePicker || '';
+                document.getElementById('executives').value = data.executives || '';
+                document.getElementById('pcs1').value = data.pcs1 || '';
+                document.getElementById('pcs5').value = data.pcs5 || '';
+                document.getElementById('pcs10').value = data.pcs10 || '';
+                document.getElementById('pcs20').value = data.pcs20 || '';
+                document.getElementById('pcs50').value = data.pcs50 || '';
+                document.getElementById('pcs100').value = data.pcs100 || '';
+                document.getElementById('centsVal').value = data.centsVal || '';
+                document.getElementById('qrVal').value = data.qrVal || '';
+            } catch(e) {}
+        } else {
+            // Set default date ke hari ini jika kosong
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('datePicker').value = today;
+        }
+        calculate();
+    }
 
     function calculate() {
         let p1 = parseFloat(document.getElementById('pcs1').value) || 0;
@@ -350,10 +403,13 @@
     }
 
     function resetForm() {
-        if (confirm("Adakah anda pasti untuk reset SEMUA maklumat jualan dan kiraan wang?")) {
+        if (confirm("Adakah anda pasti untuk reset SEMUA maklumat jualan?")) {
+            localStorage.removeItem('salesCalcSavedData');
+            
             document.getElementById('school').value = "";
-            document.getElementById('dateStr').value = "";
             document.getElementById('executives').value = "";
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('datePicker').value = today;
 
             document.getElementById('pcs1').value = "";
             document.getElementById('pcs5').value = "";
@@ -369,10 +425,27 @@
         }
     }
 
+    // Fungsi Format Tarikh ke Bahasa Malaysia & Hari Automatik
+    function formatTarikhBM(dateString) {
+        if (!dateString) return "";
+        const dateObj = new Date(dateString);
+        
+        const hariArr = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+        const bulanArr = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
+        
+        const hari = hariArr[dateObj.getDay()];
+        const hariNum = String(dateObj.getDate()).padStart(2, '0');
+        const bulan = bulanArr[dateObj.getMonth()];
+        const tahun = dateObj.getFullYear();
+
+        return `${hariNum}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${tahun} - ${hari}`;
+    }
+
     function generateReport() {
         let data = calculate();
         let school = document.getElementById('school').value;
-        let dateStr = document.getElementById('dateStr').value;
+        let rawDate = document.getElementById('datePicker').value;
+        let dateStr = formatTarikhBM(rawDate);
         let executives = document.getElementById('executives').value;
 
         function fmt(num) {
@@ -394,7 +467,7 @@
         let reportText = "";
         
         if (school) reportText += `*${school.toUpperCase()}*\n`;
-        if (dateStr) reportText += `${dateStr} \n\n`;
+        if (dateStr) reportText += `${dateStr}\n\n`;
         
         if (executives) {
             reportText += `*Sales Executives:*\n(${executives})\n\n`;
@@ -420,24 +493,22 @@
         document.getElementById('reportOutput').value = reportText;
         document.getElementById('reportSection').style.display = 'block';
         
-        copyToClipboard();
-    }
-
-    function copyToClipboard() {
+        // Salin terus tanpa pop-up alert
         let copyText = document.getElementById("reportOutput");
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
     }
 
-    // Register Service Worker dari fail sw.js
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').catch(()=>{});
         });
     }
 
-    calculate();
+    // Jalankan pemuatan data yang tersimpan semasa app dibuka
+    loadSavedData();
 </script>
 
 </body>
