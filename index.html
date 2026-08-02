@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sales Calc">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/000000/calculator.png">
-    <link rel="icon" type="image/png" href="https://img.icons8.com/color/96/000000/calculator.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
     
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="manifest.json">
@@ -59,8 +59,15 @@
             max-width: 500px;
             margin: 0 auto 15px auto;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
+        }
+
+        .app-logo {
+            height: 38px;
+            width: 38px;
+            object-fit: contain;
+            border-radius: 6px;
         }
 
         .theme-toggle-btn {
@@ -116,7 +123,6 @@
             color: var(--text-color);
         }
 
-        /* Supaya ikon kalendar nampak jelas dalam mod gelap/cerah */
         input[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
             filter: invert(0.5);
@@ -225,6 +231,7 @@
 <body>
 
 <div class="header-bar">
+    <img src="icon.png" alt="Logo" class="app-logo" id="appLogo">
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
 </div>
 
@@ -302,7 +309,6 @@
 </div>
 
 <script>
-    // Theme Toggle Logic
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
@@ -320,7 +326,6 @@
         }
     })();
 
-    // Auto-Save Data to LocalStorage
     function saveData() {
         const data = {
             school: document.getElementById('school').value,
@@ -338,7 +343,6 @@
         localStorage.setItem('salesCalcSavedData', JSON.stringify(data));
     }
 
-    // Load Saved Data on Startup
     function loadSavedData() {
         const saved = localStorage.getItem('salesCalcSavedData');
         if (saved) {
@@ -357,7 +361,6 @@
                 document.getElementById('qrVal').value = data.qrVal || '';
             } catch(e) {}
         } else {
-            // Set default date ke hari ini jika kosong
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('datePicker').value = today;
         }
@@ -425,7 +428,6 @@
         }
     }
 
-    // Fungsi Format Tarikh ke Bahasa Malaysia & Hari Automatik
     function formatTarikhBM(dateString) {
         if (!dateString) return "";
         const dateObj = new Date(dateString);
@@ -493,21 +495,18 @@
         document.getElementById('reportOutput').value = reportText;
         document.getElementById('reportSection').style.display = 'block';
         
-        // Salin terus tanpa pop-up alert
         let copyText = document.getElementById("reportOutput");
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
     }
 
-    // Register Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').catch(()=>{});
         });
     }
 
-    // Jalankan pemuatan data yang tersimpan semasa app dibuka
     loadSavedData();
 </script>
 
