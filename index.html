@@ -252,6 +252,9 @@
 
     <label>Sales Executives</label>
     <input type="text" id="executives" placeholder="cth: Shakhir, Azwa & Syu" oninput="saveData()">
+
+    <label>Introducer</label>
+    <input type="text" id="introducer" placeholder="cth: Fayruz" oninput="saveData()">
 </div>
 
 <div class="card">
@@ -337,6 +340,7 @@
             school: document.getElementById('school').value,
             datePicker: document.getElementById('datePicker').value,
             executives: document.getElementById('executives').value,
+            introducer: document.getElementById('introducer').value,
             pcs1: document.getElementById('pcs1').value,
             pcs5: document.getElementById('pcs5').value,
             pcs10: document.getElementById('pcs10').value,
@@ -357,6 +361,7 @@
                 document.getElementById('school').value = data.school || '';
                 document.getElementById('datePicker').value = data.datePicker || '';
                 document.getElementById('executives').value = data.executives || '';
+                document.getElementById('introducer').value = data.introducer || '';
                 document.getElementById('pcs1').value = data.pcs1 || '';
                 document.getElementById('pcs5').value = data.pcs5 || '';
                 document.getElementById('pcs10').value = data.pcs10 || '';
@@ -417,6 +422,7 @@
             
             document.getElementById('school').value = "";
             document.getElementById('executives').value = "";
+            document.getElementById('introducer').value = "";
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('datePicker').value = today;
 
@@ -455,6 +461,7 @@
         let rawDate = document.getElementById('datePicker').value;
         let dateStr = formatTarikhBM(rawDate);
         let executives = document.getElementById('executives').value;
+        let introducer = document.getElementById('introducer').value;
 
         function fmt(num) {
             return num.toLocaleString('en-US');
@@ -479,6 +486,10 @@
         
         if (executives) {
             reportText += `*Sales Executives:*\n(${executives})\n\n`;
+        }
+
+        if (introducer) {
+            reportText += `*Introducer: ${introducer}*\n\n`;
         }
 
         if (paperLines.length > 0) {
